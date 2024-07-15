@@ -1,3 +1,29 @@
+# Support-Nerd Weekly Activity Data Visualization
+
+This repository contains data visualizations of the weekly activity data from the Support-Nerd Google Sheet. The visualizations are created using the D3.js library.
+
+## Data Source
+
+The data used in this repository comes from the Support-Nerd weekly activity Google Sheet. The data is updated regularly to reflect the latest activities.
+
+## How to Update Data
+
+Updating the data is very simple. Follow these steps:
+
+1. Save the Support-Nerd weekly activity Google Sheet as a `.csv` file.
+2. Fork this repository.
+3. Replace the existing CSV file in the repository with the new one.
+4. Submit a pull request (PR) with the updated data.
+
+## Technology Used
+
+This project uses the [D3.js](https://d3js.org/) library for data visualization. D3.js is a powerful JavaScript library for producing dynamic, interactive data visualizations in web browsers.
+
+## Customization
+
+This website is highly extensible, allowing you to add any content you like. The flexible architecture ensures that new visualizations, features, or data sources can be seamlessly integrated.
+
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
