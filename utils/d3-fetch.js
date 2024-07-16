@@ -26,7 +26,7 @@ function useFetchWeeklyPerformanceData(filename) {
             tempData.push({
               username: each["Discord name"].slice(0, 5),
               week: week,
-              count: Number(each[week]),
+              count: Number(each[week]=="Nerd-In-Training"? '' : each[week]),
             });
           }
 
@@ -51,25 +51,27 @@ function useFetchCommunitymemberTrackerData(filename) {
     async function fetchData() {
       d3.csv(filename).then((d) => {
         const newFormData = [];
-        const dateStringArray = d.columns
-          .filter((column) => column !== "Data")
-        const dateDateArray = dateStringArray .map((dateString) => {
-            const year = new Date().getFullYear(); // Get the current year
-            const fullDateString = `${dateString}-${year}`; // Append the year to the date string
-            const date = new Date(fullDateString);
-            return date;
-          });
+        const dateStringArray = d.columns.filter((column) => column !== "Data");
+        const dateDateArray = dateStringArray.map((dateString) => {
+          const year = new Date().getUTCFullYear(); // Get the current year in UTC
+          const [monthString, day] = dateString.split('-');
+          const month = new Date(Date.parse(`${monthString} 1`)).getMonth(); // Convert month name to month index (0-based)
+          
+          // Create a UTC date
+          const date = new Date(Date.UTC(year, month, day));
+          return date;
+        });
 
         d.forEach((each) => {
-          dateDateArray.forEach(( date, index) => {
+          dateDateArray.forEach((date, index) => {
             newFormData.push({
               category: each.Data,
               date: date,
               count: Number(each[dateStringArray[index]]),
             });
-          })
+          });
         });
-
+        newFormData.tickets = dateDateArray 
         setData(newFormData);
       });
     }

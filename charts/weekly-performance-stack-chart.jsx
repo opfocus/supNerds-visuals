@@ -60,7 +60,7 @@ function StackChart({ data, title }) {
       .unknown("#ccc");
 
     // A function to format the value in the tooltip.
-    const formatValue = (x) => (isNaN(x) ? "N/A" : x.toLocaleString("en"));
+    const formatValue = (x) => (isNaN(x) ? "0" : x.toLocaleString("en"));
 
     const svg = d3.select(ref.current);
 

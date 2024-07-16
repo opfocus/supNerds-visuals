@@ -1,4 +1,4 @@
-export type { LinePlotProps, CommunityData };
+export type { LinePlotProps, CommunityDataItem, CommunityDataArray };
 
 type LinePlotProps = {
   data: {
@@ -14,8 +14,12 @@ type LinePlotProps = {
   marginLeft?: number;
 };
 
-type CommunityData = {
+type CommunityDataItem = {
   category?: string;
   date: Date;
   count: number;
-};
+} 
+
+type CommunityDataArray = CommunityDataItem[] & {
+  tickets: Date[]
+}

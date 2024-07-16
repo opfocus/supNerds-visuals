@@ -1,7 +1,7 @@
 "use client";
 import * as d3 from "d3";
 import { useRef, useEffect } from "react";
-import { CommunityData } from "@/lib/type";
+import { CommunityDataItem, CommunityDataArray } from "@/lib/type";
 
 import { useFetchCommunitymemberTrackerData } from "@/utils/d3-fetch";
 
@@ -10,30 +10,29 @@ export default function CommunityMemberTracker() {
   const titleName2 = "Discord-weekly-activity";
   const data = useFetchCommunitymemberTrackerData(
     "Community-Member-Tracker.csv"
-  ) as CommunityData[] | undefined;
+  ) as CommunityDataArray | undefined;
 
   if (data) {
     const discordMember = data
-      .filter((e: CommunityData) => e.category === titleName1)
-      .map((e: CommunityData) => ({
+      .filter((e: any) => e.category === titleName1)
+      .map((e: any) => ({
         date: e.date,
         count: e.count,
       }));
     const discordWeeklyActivity = data.filter(
-      (e: CommunityData) => e.category === titleName2
+      (e: any) => e.category === titleName2
     );
     return (
-      <div className=" mt-8 flex flex-row gap-4">
-        <CurveChart data={discordMember} title={titleName1} />
-        <CurveChart data={discordWeeklyActivity} title={titleName2} />
+      <div className=" mt-8 flex flex-row gap-4 p-4">
+        <CurveChart data={discordMember} title={titleName1} tickets={data.tickets}/>
+        <CurveChart data={discordWeeklyActivity} title={titleName2} tickets={data.tickets}/>
       </div>
     );
   }
 }
 
-function CurveChart({ data, title }: { data: CommunityData[]; title: string }) {
+function CurveChart({ data, title, tickets }: { data: CommunityDataItem[]; title: string; tickets:Date[] }) {
   const ref = useRef<SVGSVGElement>(null);
-
   useEffect(() => {
     if (!ref.current) return;
     const width = 640;
@@ -41,7 +40,7 @@ function CurveChart({ data, title }: { data: CommunityData[]; title: string }) {
     const marginTop = 40;
     const marginRight = 30;
     const marginBottom = 30;
-    const marginLeft = 40;
+    const marginLeft = 60;
 
     // X scale.
     const x = d3
@@ -52,8 +51,8 @@ function CurveChart({ data, title }: { data: CommunityData[]; title: string }) {
     // Y scale.
     const y = d3
       .scaleLinear()
-      // .domain([0, d3.max(data, (d) => d.count)] as [number, number]) // y轴从90开始
       .domain(d3.extent(data, (d) => d.count) as number[])
+
       .nice()
       .range([height - marginBottom, marginTop]);
 
@@ -67,8 +66,13 @@ function CurveChart({ data, title }: { data: CommunityData[]; title: string }) {
       .select(ref.current)
       .attr("width", width)
       .attr("height", height)
-      .attr("viewBox", [0, 0, width, height])
-      .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+
+      svg
+      .append("path")
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 1.5)
+      .attr("d", line(data));
 
     svg
       .append("text")
@@ -80,18 +84,21 @@ function CurveChart({ data, title }: { data: CommunityData[]; title: string }) {
       .text(title);
 
     // Add X-axis.
-    svg
-      .append("g")
-      .attr("transform", `translate(0,${height - marginBottom})`)
-      .call(d3.axisBottom(x).ticks(5).tickSizeOuter(0));
+    const formatDate = d3.timeFormat("%b %d")
 
-    // Add Y-axis.
+    svg
+    .append("g")
+    .attr("transform", `translate(0,${height - marginBottom})`)
+    .call(d3.axisBottom(x)
+      .tickValues(tickets) // Use the provided tickets array
+      .tickFormat((d, i) => formatDate(d as Date)) // Format the ticks
+      .tickSizeOuter(0));
+
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
       .call(
         d3.axisLeft(y)
-        // .ticks(height / 40)
       )
       .call((g) => g.select(".domain").remove())
       .call((g) =>
@@ -110,12 +117,6 @@ function CurveChart({ data, title }: { data: CommunityData[]; title: string }) {
           .attr("text-anchor", "start")
           .text("↑ Count ($)")
       );
-    svg
-      .append("path")
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
-      .attr("d", line(data));
   }, []);
 
   return <svg ref={ref}></svg>;
