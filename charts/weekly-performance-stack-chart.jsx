@@ -2,13 +2,26 @@
 
 import { useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { useFetchWeeklyPerformanceData } from "@/utils/d3-fetch";
+import {
+  useFetchWeeklyPerformanceData,
+  useFetchTicketActivityData,
+} from "@/utils/d3-fetch";
+import { Fragment } from "react";
 
 export default function WeeklyPerformance() {
-  const titleName = "Message Activity";
+  const titleName1 = "Message Activity";
+  const titleName2 = "Ticket Activity";
+
   const weeklyPerformance = useFetchWeeklyPerformanceData("Support-Nerd.csv");
-  if (weeklyPerformance)
-    return <StackChart data={weeklyPerformance} title={titleName} />;
+  const ticketActivity = useFetchTicketActivityData("Ticket-activity.csv");
+
+  if (weeklyPerformance && ticketActivity)
+    return (
+      <Fragment>
+        <StackChart data={weeklyPerformance} title={titleName1} />;
+        <StackChart data={ticketActivity} title={titleName2} />;
+      </Fragment>
+    );
 }
 
 function StackChart({ data, title }) {
