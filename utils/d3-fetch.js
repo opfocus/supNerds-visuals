@@ -13,7 +13,7 @@ function useFetchWeeklyPerformanceData(filename) {
       d3.csv(filename).then((d) => {
         const newFormData = [];
         const performanceWeeks = d.columns.filter((column) =>
-          column.includes("Weekly performance")
+          column.includes("Weekly performance"),
         );
 
         d.forEach((each) => {
@@ -26,7 +26,7 @@ function useFetchWeeklyPerformanceData(filename) {
             tempData.push({
               username: each["Discord name"].slice(0, 5),
               week: week,
-              count: Number(each[week]=="Nerd-In-Training"? '' : each[week]),
+              count: Number(each[week] == "Nerd-In-Training" ? "" : each[week]),
             });
           }
 
@@ -54,9 +54,9 @@ function useFetchCommunitymemberTrackerData(filename) {
         const dateStringArray = d.columns.filter((column) => column !== "Data");
         const dateDateArray = dateStringArray.map((dateString) => {
           const year = new Date().getUTCFullYear(); // Get the current year in UTC
-          const [monthString, day] = dateString.split('-');
+          const [monthString, day] = dateString.split("-");
           const month = new Date(Date.parse(`${monthString} 1`)).getMonth(); // Convert month name to month index (0-based)
-          
+
           // Create a UTC date
           const date = new Date(Date.UTC(year, month, day));
           return date;
@@ -71,7 +71,7 @@ function useFetchCommunitymemberTrackerData(filename) {
             });
           });
         });
-        newFormData.tickets = dateDateArray 
+        newFormData.tickets = dateDateArray;
         setData(newFormData);
       });
     }

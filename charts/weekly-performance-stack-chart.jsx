@@ -5,9 +5,10 @@ import * as d3 from "d3";
 import { useFetchWeeklyPerformanceData } from "@/utils/d3-fetch";
 
 export default function WeeklyPerformance() {
-  const titleName = "Message Activity"
+  const titleName = "Message Activity";
   const weeklyPerformance = useFetchWeeklyPerformanceData("Support-Nerd.csv");
-  if (weeklyPerformance) return <StackChart data={weeklyPerformance} title={titleName}/>;
+  if (weeklyPerformance)
+    return <StackChart data={weeklyPerformance} title={titleName} />;
 }
 
 function StackChart({ data, title }) {
@@ -31,8 +32,8 @@ function StackChart({ data, title }) {
       d3.index(
         data,
         (d) => d.username,
-        (d) => d.week
-      )
+        (d) => d.week,
+      ),
     ); // group by stack then series key
 
     // Prepare the scales for positional and color encodings.
@@ -42,8 +43,8 @@ function StackChart({ data, title }) {
         d3.groupSort(
           data,
           (D) => -d3.sum(D, (d) => d.count),
-          (d) => d.username
-        )
+          (d) => d.username,
+        ),
       )
       .range([marginLeft, width - marginRight])
       .padding(0.1);
@@ -89,7 +90,7 @@ function StackChart({ data, title }) {
       .append("title")
       .text(
         (d) =>
-          `${d.data[0]} ${d.key}\n${formatValue(d.data[1].get(d.key).count)}`
+          `${d.data[0]} ${d.key}\n${formatValue(d.data[1].get(d.key).count)}`,
       );
 
     // Append the horizontal axis.
@@ -108,5 +109,13 @@ function StackChart({ data, title }) {
   }, [ref]);
 
   // return Object.assign(svg.node(), {scales: {color}});
-  return <svg ref={ref} width={width} height={height}></svg>;
+  return (
+    <svg
+      ref={ref}
+      width={width}
+      height={height}
+      viewBox={[0, 0, width, height]}
+      className="mx-auto h-auto max-w-full"
+    ></svg>
+  );
 }

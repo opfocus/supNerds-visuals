@@ -9,7 +9,7 @@ export default function CommunityMemberTracker() {
   const titleName1 = "Discord-Member";
   const titleName2 = "Discord-weekly-activity";
   const data = useFetchCommunitymemberTrackerData(
-    "Community-Member-Tracker.csv"
+    "Community-Member-Tracker.csv",
   ) as CommunityDataArray | undefined;
 
   if (data) {
@@ -20,27 +20,45 @@ export default function CommunityMemberTracker() {
         count: e.count,
       }));
     const discordWeeklyActivity = data.filter(
-      (e: any) => e.category === titleName2
+      (e: any) => e.category === titleName2,
     );
     return (
-      <div className=" mt-8 flex flex-row gap-4 p-4">
-        <CurveChart data={discordMember} title={titleName1} tickets={data.tickets}/>
-        <CurveChart data={discordWeeklyActivity} title={titleName2} tickets={data.tickets}/>
+      <div className="mx-auto mt-8 flex flex-col gap-4 p-4">
+        <CurveChart
+          data={discordMember}
+          title={titleName1}
+          tickets={data.tickets}
+        />
+        <CurveChart
+          data={discordWeeklyActivity}
+          title={titleName2}
+          tickets={data.tickets}
+        />
       </div>
     );
   }
 }
 
-function CurveChart({ data, title, tickets }: { data: CommunityDataItem[]; title: string; tickets:Date[] }) {
+function CurveChart({
+  data,
+  title,
+  tickets,
+}: {
+  data: CommunityDataItem[];
+  title: string;
+  tickets: Date[];
+}) {
   const ref = useRef<SVGSVGElement>(null);
+
+  const width = 928;
+  const height = 400;
+  const marginTop = 40;
+  const marginRight = 30;
+  const marginBottom = 30;
+  const marginLeft = 60;
+
   useEffect(() => {
     if (!ref.current) return;
-    const width = 640;
-    const height = 400;
-    const marginTop = 40;
-    const marginRight = 30;
-    const marginBottom = 30;
-    const marginLeft = 60;
 
     // X scale.
     const x = d3
@@ -62,12 +80,9 @@ function CurveChart({ data, title, tickets }: { data: CommunityDataItem[]; title
       .y((d) => y(d.count));
     // .curve(d3.curveCatmullRom.alpha(0.5));
 
-    const svg = d3
-      .select(ref.current)
-      .attr("width", width)
-      .attr("height", height)
+    const svg = d3.select(ref.current);
 
-      svg
+    svg
       .append("path")
       .attr("fill", "none")
       .attr("stroke", "steelblue")
@@ -84,29 +99,30 @@ function CurveChart({ data, title, tickets }: { data: CommunityDataItem[]; title
       .text(title);
 
     // Add X-axis.
-    const formatDate = d3.timeFormat("%b %d")
+    const formatDate = d3.timeFormat("%b %d");
 
     svg
-    .append("g")
-    .attr("transform", `translate(0,${height - marginBottom})`)
-    .call(d3.axisBottom(x)
-      .tickValues(tickets) // Use the provided tickets array
-      .tickFormat((d, i) => formatDate(d as Date)) // Format the ticks
-      .tickSizeOuter(0));
+      .append("g")
+      .attr("transform", `translate(0,${height - marginBottom})`)
+      .call(
+        d3
+          .axisBottom(x)
+          .tickValues(tickets) // Use the provided tickets array
+          .tickFormat((d, i) => formatDate(d as Date)) // Format the ticks
+          .tickSizeOuter(0),
+      );
 
     svg
       .append("g")
       .attr("transform", `translate(${marginLeft},0)`)
-      .call(
-        d3.axisLeft(y)
-      )
+      .call(d3.axisLeft(y))
       .call((g) => g.select(".domain").remove())
       .call((g) =>
         g
           .selectAll(".tick line")
           .clone()
           .attr("x2", width - marginLeft - marginRight)
-          .attr("stroke-opacity", 0.1)
+          .attr("stroke-opacity", 0.1),
       )
       .call((g) =>
         g
@@ -115,9 +131,17 @@ function CurveChart({ data, title, tickets }: { data: CommunityDataItem[]; title
           .attr("y", 10)
           .attr("fill", "currentColor")
           .attr("text-anchor", "start")
-          .text("↑ Count ($)")
+          .text("↑ Count ($)"),
       );
   }, []);
 
-  return <svg ref={ref}></svg>;
+  return (
+    <svg
+      ref={ref}
+      width={width}
+      height={height}
+      viewBox={`0 0 ${width} ${height}`}
+      className="mx-auto h-auto max-w-full"
+    ></svg>
+  );
 }
