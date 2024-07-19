@@ -1,4 +1,10 @@
-export type { LinePlotProps, CommunityDataItem, CommunityDataArray };
+export type {
+  LinePlotProps,
+  CommunityDataItem,
+  CommunityDataArray,
+  Avatars,
+  MemberInfo,
+};
 
 type LinePlotProps = {
   data: {
@@ -18,8 +24,22 @@ type CommunityDataItem = {
   category?: string;
   date: Date;
   count: number;
-} 
+};
 
 type CommunityDataArray = CommunityDataItem[] & {
-  tickets: Date[]
-}
+  tickets: Date[];
+};
+
+type Avatars = {
+  id: string;
+  hash: string;
+};
+
+type MemberInfo = {
+  id: string;
+  nickname: string;
+  avatar: string;
+  join_date: string;
+  language: string;
+  role: string;
+};

@@ -6,7 +6,36 @@ export {
   useFetchWeeklyPerformanceData,
   useFetchTicketActivityData,
   useFetchCommunitymemberTrackerData,
+  useFetchSupNerdsMemberInfoData,
 };
+
+// Fetch Suppport-Nerds member data with file name
+import { avatars, domain, suffix } from "@/lib/avatars";
+
+function useFetchSupNerdsMemberInfoData(filename) {
+  const [data, setData] = useState();
+
+  useEffect(() => {
+    const newFormData = [];
+    d3.csv(filename).then((d) => {
+      d.forEach((each) => {
+        let element = avatars.find((avatar) => avatar.id === each["Discord ID"]);
+        if (element)
+          newFormData.push({
+            id: element.id,
+            nickname: each["Discord name"],
+            avatar: domain +element.id + "/" + element.hash + suffix,
+            join_date: each["Start Date"],
+            language: each["Active language"],
+            role: each["Note"],
+          });
+      });
+      setData(newFormData)
+    });
+  }, []);
+
+  return data;
+}
 
 // Fetch and format Weekly performance data with file name
 function useFetchWeeklyPerformanceData(filename) {
