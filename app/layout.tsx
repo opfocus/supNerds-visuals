@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "supNerds Visuals",
   creator: "simple8720",
   icons: {
-    icon: '/Profile-Logo.png', 
+    icon: "/Profile-Logo.png",
   },
 
   // metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL!),
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     description:
       "Optimism support NERDs are highly values aligned with Optimism and are of course highly Optimistic! Support NERDs provide support to the Optimism Discord, helping users with questions, and pointing people in the right direction.",
     siteName: "supNerds Visuals",
-    images: ['/optimism-city.png']
+    images: ["/Chart-from-fao.jpg"],
   },
   twitter: {
     card: "summary_large_image",

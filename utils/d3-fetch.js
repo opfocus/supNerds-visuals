@@ -84,7 +84,7 @@ function useFetchTicketActivityData(filename) {
         column.includes("Total"),
       );
       const timePoints = timePointsColums.map((timePoint) =>
-        timePoint.replace("Total closed-ticket \n", "").replace(/\s/g, ""),
+        timePoint.replace(/[\s, \n]/g, "").replace("Totalclosed-ticket", ""),
       );
 
       d.forEach((each) => {
@@ -96,7 +96,7 @@ function useFetchTicketActivityData(filename) {
         timePoints.forEach((timePoint, index) => {
           sum += duringCount;
           if (index < timePoints.length - 1) {
-            duringName = `closed-ticket:(${timePoint}-${timePoints[index + 1]})`;
+            duringName = `closed-ticket(${timePoint}-${timePoints[index + 1]})`;
             duringCount =
               Number(each[timePointsColums[index + 1]]) -
               Number(each[timePointsColums[index]]);

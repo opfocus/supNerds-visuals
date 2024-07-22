@@ -2,6 +2,7 @@
 import * as d3 from "d3";
 import { useRef, useEffect } from "react";
 import { CommunityDataItem, CommunityDataArray } from "@/lib/type";
+import { Fragment } from "react";
 
 import { useFetchCommunitymemberTrackerData } from "@/utils/d3-fetch";
 
@@ -23,7 +24,7 @@ export default function CommunityMemberTracker() {
       (e: any) => e.category === titleName2,
     );
     return (
-      <div className="mx-auto mt-8 flex flex-col gap-4 p-4">
+      <Fragment>
         <CurveChart
           data={discordMember}
           title={titleName1}
@@ -34,7 +35,7 @@ export default function CommunityMemberTracker() {
           title={titleName2}
           tickets={data.tickets}
         />
-      </div>
+      </Fragment>
     );
   }
 }
@@ -54,7 +55,7 @@ function CurveChart({
   const height = 400;
   const marginTop = 40;
   const marginRight = 30;
-  const marginBottom = 30;
+  const marginBottom = 40;
   const marginLeft = 60;
 
   useEffect(() => {
@@ -95,7 +96,7 @@ function CurveChart({
       .attr("y", marginTop / 2)
       .attr("text-anchor", "middle")
       .style("font-size", "16px")
-      .style("font-weight", "bold")
+      .style("font-weight", "600")
       .text(title);
 
     // Add X-axis.
@@ -141,7 +142,7 @@ function CurveChart({
       width={width}
       height={height}
       viewBox={`0 0 ${width} ${height}`}
-      className="mx-auto h-auto max-w-full"
+      className="mx-auto my-8 h-auto max-w-full px-4 py-8 shadow-md hover:shadow-xl"
     ></svg>
   );
 }
